@@ -1,31 +1,41 @@
 <script setup>
 const props = defineProps({
   color: String,
-  index: Number
+  index: Number,
+  prediction: Object
 })
 
 defineEmits(['click'])
 
 const colorMap = {
   'Red': '#ff4d4d',
-  'Yellow': '#ffd700',
-  'Sky Blue': '#87ceeb',
-  'Green': '#4caf50',
-  'Purple': '#9c27b0',
+  'Yellow': '#ffde21',
+  'Sky Blue': '#5ce1e6',
+  'Green': '#4cd137',
+  'Purple': '#c56cf0',
 }
 </script>
 
 <template>
   <div 
     class="gem-cell" 
+    :class="{ 'is-predicted': !color && prediction, 'is-filled': color }"
     :style="{ 
-      backgroundColor: colorMap[color] || 'rgba(255, 255, 255, 0.05)',
-      borderColor: colorMap[color] || 'rgba(255, 255, 255, 0.2)',
-      boxShadow: color ? `0 0 15px ${colorMap[color]}` : 'none'
+      backgroundColor: color ? colorMap[color] : (prediction ? `${colorMap[prediction.color]}50` : 'rgba(255, 255, 255, 0.5)'),
     }"
     @click="$emit('click', index)"
   >
-    <span v-if="!color">{{ index + 1 }}</span>
+    <span v-if="color"></span>
+    
+    <span 
+      v-else-if="prediction" 
+      class="prediction-text"
+      :style="{ color: colorMap[prediction.color] }"
+    >
+      {{ prediction.confidence }}%
+    </span>
+    
+    <span v-else class="empty-number">{{ index + 1 }}</span>
   </div>
 </template>
 
@@ -33,17 +43,46 @@ const colorMap = {
 .gem-cell {
   width: 100%;
   aspect-ratio: 1;
-  border: 2px dashed;
-  border-radius: 12px;
+  clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
 .gem-cell:hover {
-  transform: scale(1.05);
+  transform: scale(1.1) translateY(-4px);
+  filter: brightness(1.1);
+}
+
+.is-predicted {
+  animation: breathe 2s infinite alternate ease-in-out;
+}
+
+.is-filled {
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.prediction-text {
+  font-size: 1.2rem;
+  font-weight: 900;
+  text-shadow: 0px 1px 3px rgba(0,0,0,0.3); 
+}
+
+.empty-number {
+  font-size: 1.5rem;
+  color: rgba(26, 43, 76, 0.3);
+  font-weight: bold;
+}
+
+@keyframes breathe {
+  0% { transform: scale(0.95); }
+  100% { transform: scale(1.02); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 </style>
