@@ -1,0 +1,20 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  background-attachment: fixed;
+  color: #1a2b4c;
+  font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+  width: 100%;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
