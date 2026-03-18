@@ -1,68 +1,94 @@
 <script setup>
+import { GEM_COLORS } from '../utils/colors.js'
+
 defineEmits(['select', 'close'])
 
-const colors = [
-  { name: 'Red', hex: '#ff4d4d' },
-  { name: 'Yellow', hex: '#ffd700' },
-  { name: 'Sky Blue', hex: '#87ceeb' },
-  { name: 'Green', hex: '#4caf50' },
-  { name: 'Purple', hex: '#9c27b0' },
-  { name: null, hex: '#333', label: 'Clear' }
-]
+const colorNames = Object.keys(GEM_COLORS)
 </script>
 
 <template>
-  <div class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-content">
+  <div class="palette-overlay" @click.self="$emit('close')">
+    <div class="palette-card">
       <h3>Select Gem Color</h3>
-      <div class="color-grid">
+      <div class="color-options">
         <button 
-          v-for="color in colors" 
-          :key="color.name"
+          v-for="name in colorNames" 
+          :key="name"
           class="color-btn"
-          :style="{ backgroundColor: color.hex }"
-          @click="$emit('select', color.name)"
-        >
-          {{ color.label || color.name }}
-        </button>
+          :style="{ backgroundColor: GEM_COLORS[name].hex }"
+          @click="$emit('select', name)"
+          :title="`${name} (${GEM_COLORS[name].symbol})`"
+        ></button>
       </div>
+      <button class="cancel-btn" @click="$emit('close')">Cancel</button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.modal-overlay {
+.palette-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(26, 43, 76, 0.4);
+  backdrop-filter: blur(8px);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 100;
+  align-items: center;
+  z-index: 9999;
+  animation: fade-in 0.2s ease-out;
 }
-.modal-content {
-  background: #2b1d3d;
+
+.palette-card {
+  background: white;
   padding: 2rem;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   text-align: center;
+  width: 90%;
+  max-width: 400px;
+  animation: scale-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.color-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+h3 {
+  margin: 0 0 1.5rem 0;
+  color: #1a2b4c;
+}
+
+.color-options {
+  display: flex;
+  justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
 }
+
 .color-btn {
-  padding: 1rem;
+  width: 50px;
+  height: 50px;
   border: none;
-  border-radius: 8px;
-  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+}
+
+.color-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+}
+
+.cancel-btn {
+  background: #f0f2f5;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 100px;
+  color: #65676b;
   font-weight: bold;
   cursor: pointer;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scale-up { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 </style>

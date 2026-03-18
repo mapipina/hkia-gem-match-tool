@@ -82,22 +82,24 @@ const handleSaveWin = async () => {
 </script>
 
 <template>
-  <div class="grid-container">
-    <div class="gem-grid">
-      <GemCell 
-        v-for="(color, index) in gridState" 
-        :key="index"
-        :index="index"
-        :color="color"
-        :prediction="predictions[index]" 
-        @click="openPalette"
-      />
-    </div>
+  <div class="app-viewport">
     
-    <div class="button-group">
-      <button class="reset-btn" @click="resetGrid">Reset Board</button>
-      <button class="save-btn" @click="handleSaveWin">Save Game Pattern</button>
-      <!-- <button class="reset-btn" @click="seedFakeData">Inject Fake Data</button> -->
+    <div class="grid-container">
+      <div class="gem-grid">
+        <GemCell 
+          v-for="(color, index) in gridState" 
+          :key="index"
+          :index="index"
+          :color="color"
+          :prediction="predictions[index]" 
+          @click="openPalette"
+        />
+      </div>
+      <div class="button-group">
+        <button class="reset-btn" @click="resetGrid">Reset Board</button>
+        <button class="save-btn" @click="handleSaveWin">Save Game Pattern</button>
+        <!-- <button class="reset-btn" @click="seedFakeData">Inject Fake Data</button> -->
+      </div>
     </div>
 
     <ColorPalette 
@@ -105,6 +107,7 @@ const handleSaveWin = async () => {
       @select="selectColor" 
       @close="closePalette" 
     />
+    
   </div>
 </template>
 

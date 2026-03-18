@@ -1,4 +1,6 @@
 <script setup>
+import { GEM_COLORS } from '../utils/colors.js'
+
 const props = defineProps({
   color: String,
   index: Number,
@@ -6,14 +8,6 @@ const props = defineProps({
 })
 
 defineEmits(['click'])
-
-const colorMap = {
-  'Red': '#ff4d4d',
-  'Yellow': '#ffde21',
-  'Sky Blue': '#5ce1e6',
-  'Green': '#4cd137',
-  'Purple': '#c56cf0',
-}
 </script>
 
 <template>
@@ -21,8 +15,9 @@ const colorMap = {
     class="gem-cell" 
     :class="{ 'is-predicted': !color && prediction, 'is-filled': color }"
     :style="{ 
-      backgroundColor: color ? colorMap[color] : (prediction ? `${colorMap[prediction.color]}50` : 'rgba(255, 255, 255, 0.5)'),
+      backgroundColor: color ? GEM_COLORS[color].hex : (prediction ? `${GEM_COLORS[prediction.color].hex}50` : 'rgba(255, 255, 255, 0.5)'),
     }"
+    :title="color ? `${color} (${GEM_COLORS[color].symbol})` : ''"
     @click="$emit('click', index)"
   >
     <span v-if="color"></span>
@@ -30,7 +25,7 @@ const colorMap = {
     <span 
       v-else-if="prediction" 
       class="prediction-text"
-      :style="{ color: colorMap[prediction.color] }"
+      :style="{ color: GEM_COLORS[prediction.color].hex }"
     >
       {{ prediction.confidence }}%
     </span>
